@@ -31,6 +31,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+uint32_t adcValues[3];
+
+uint32_t data1;
+uint32_t data2;
+uint32_t data3;
 
 /* USER CODE END PD */
 
@@ -40,6 +45,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+ADC_HandleTypeDef hadc1;
 
 /* USER CODE BEGIN PV */
 
@@ -47,7 +53,19 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_ADC1_Init(void);
 /* USER CODE BEGIN PFP */
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+   if(hadc->Instance == ADC1)
+   {
+       data1 = adcValues[0];
+       data2 = adcValues[1];
+       data3 = adcValues[2];
+   }
+}
+
 
 /* USER CODE END PFP */
 
@@ -84,7 +102,12 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_ADC1_Init();
+
   /* USER CODE BEGIN 2 */
+  HAL_ADC_Start_DMA(&hadc1, adcValues, 3);
+
 
   /* USER CODE END 2 */
 
